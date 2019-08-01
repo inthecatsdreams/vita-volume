@@ -111,30 +111,30 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named VitaVolune.vpk
+# Target rules for targets named VitaVolume.vpk
 
 # Build rule for target.
-VitaVolune.vpk: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 VitaVolune.vpk
-.PHONY : VitaVolune.vpk
+VitaVolume.vpk: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 VitaVolume.vpk
+.PHONY : VitaVolume.vpk
 
 # fast build rule for target.
-VitaVolune.vpk/fast:
-	$(MAKE) -f CMakeFiles/VitaVolune.vpk.dir/build.make CMakeFiles/VitaVolune.vpk.dir/build
-.PHONY : VitaVolune.vpk/fast
+VitaVolume.vpk/fast:
+	$(MAKE) -f CMakeFiles/VitaVolume.vpk.dir/build.make CMakeFiles/VitaVolume.vpk.dir/build
+.PHONY : VitaVolume.vpk/fast
 
 #=============================================================================
-# Target rules for targets named VitaVolune
+# Target rules for targets named VitaVolume
 
 # Build rule for target.
-VitaVolune: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 VitaVolune
-.PHONY : VitaVolune
+VitaVolume: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 VitaVolume
+.PHONY : VitaVolume
 
 # fast build rule for target.
-VitaVolune/fast:
-	$(MAKE) -f CMakeFiles/VitaVolune.dir/build.make CMakeFiles/VitaVolune.dir/build
-.PHONY : VitaVolune/fast
+VitaVolume/fast:
+	$(MAKE) -f CMakeFiles/VitaVolume.dir/build.make CMakeFiles/VitaVolume.dir/build
+.PHONY : VitaVolume/fast
 
 #=============================================================================
 # Target rules for targets named eboot.bin
@@ -155,7 +155,7 @@ src/ctrl.obj: src/ctrl.c.obj
 
 # target to build an object file
 src/ctrl.c.obj:
-	$(MAKE) -f CMakeFiles/VitaVolune.dir/build.make CMakeFiles/VitaVolune.dir/src/ctrl.c.obj
+	$(MAKE) -f CMakeFiles/VitaVolume.dir/build.make CMakeFiles/VitaVolume.dir/src/ctrl.c.obj
 .PHONY : src/ctrl.c.obj
 
 src/ctrl.i: src/ctrl.c.i
@@ -164,7 +164,7 @@ src/ctrl.i: src/ctrl.c.i
 
 # target to preprocess a source file
 src/ctrl.c.i:
-	$(MAKE) -f CMakeFiles/VitaVolune.dir/build.make CMakeFiles/VitaVolune.dir/src/ctrl.c.i
+	$(MAKE) -f CMakeFiles/VitaVolume.dir/build.make CMakeFiles/VitaVolume.dir/src/ctrl.c.i
 .PHONY : src/ctrl.c.i
 
 src/ctrl.s: src/ctrl.c.s
@@ -173,7 +173,7 @@ src/ctrl.s: src/ctrl.c.s
 
 # target to generate assembly for a file
 src/ctrl.c.s:
-	$(MAKE) -f CMakeFiles/VitaVolune.dir/build.make CMakeFiles/VitaVolune.dir/src/ctrl.c.s
+	$(MAKE) -f CMakeFiles/VitaVolume.dir/build.make CMakeFiles/VitaVolume.dir/src/ctrl.c.s
 .PHONY : src/ctrl.c.s
 
 src/main.obj: src/main.c.obj
@@ -182,7 +182,7 @@ src/main.obj: src/main.c.obj
 
 # target to build an object file
 src/main.c.obj:
-	$(MAKE) -f CMakeFiles/VitaVolune.dir/build.make CMakeFiles/VitaVolune.dir/src/main.c.obj
+	$(MAKE) -f CMakeFiles/VitaVolume.dir/build.make CMakeFiles/VitaVolume.dir/src/main.c.obj
 .PHONY : src/main.c.obj
 
 src/main.i: src/main.c.i
@@ -191,7 +191,7 @@ src/main.i: src/main.c.i
 
 # target to preprocess a source file
 src/main.c.i:
-	$(MAKE) -f CMakeFiles/VitaVolune.dir/build.make CMakeFiles/VitaVolune.dir/src/main.c.i
+	$(MAKE) -f CMakeFiles/VitaVolume.dir/build.make CMakeFiles/VitaVolume.dir/src/main.c.i
 .PHONY : src/main.c.i
 
 src/main.s: src/main.c.s
@@ -200,7 +200,7 @@ src/main.s: src/main.c.s
 
 # target to generate assembly for a file
 src/main.c.s:
-	$(MAKE) -f CMakeFiles/VitaVolune.dir/build.make CMakeFiles/VitaVolune.dir/src/main.c.s
+	$(MAKE) -f CMakeFiles/VitaVolume.dir/build.make CMakeFiles/VitaVolume.dir/src/main.c.s
 .PHONY : src/main.c.s
 
 # Help Target
@@ -210,8 +210,8 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... VitaVolune.vpk"
-	@echo "... VitaVolune"
+	@echo "... VitaVolume.vpk"
+	@echo "... VitaVolume"
 	@echo "... edit_cache"
 	@echo "... eboot.bin"
 	@echo "... src/ctrl.obj"

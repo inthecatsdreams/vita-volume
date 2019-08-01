@@ -3,7 +3,7 @@ CMakeCache.txt
 eboot.bin
 cmake_install.cmake
 VitaVolume.velf
-VitaVolume.vpk
+VitaVolume.*
 VitaVolume.vpk_param.sfo
 CMakeFiles/
 CMakeFiles/*

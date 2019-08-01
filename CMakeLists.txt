@@ -8,11 +8,11 @@ if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   endif()
 endif()
 
-project(VitaVolune)
+project(VitaVolume)
 
 include("${VITASDK}/share/vita.cmake" REQUIRED)
 
-set(VITA_APP_NAME "VitaVolune")
+set(VITA_APP_NAME "VitaVolume")
 set(VITA_TITLEID  "VITAVOLUM")
 
 set(VITA_VERSION  "01.00")
