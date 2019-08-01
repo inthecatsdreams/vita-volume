@@ -15,13 +15,10 @@ void increaseVolume(int vol){
 	psvDebugScreenClear();
 	if (vol == 30){
 		psvDebugScreenPrintf("You are alredy at the maxium.");
-		sceKernelDelayThread(1000000);
 		main();
 	}
 	else {
 		int ret  = sceRegMgrSetKeyInt("/CONFIG/SOUND/", "main_volume", vol + 1);
-		printf("Volume has been increased.");
-		sceKernelDelayThread(1000000);
 		main();
 	}
 }
@@ -35,13 +32,11 @@ void decreaseVolume(int vol){
 	psvDebugScreenClear();
 	if (vol == 5){
 		psvDebugScreenPrintf("You are alredy at the minimum.");
-		sceKernelDelayThread(1000000);
 		main();
 	}
 	else {
 		int ret  = sceRegMgrSetKeyInt("/CONFIG/SOUND/", "main_volume", vol - 1);
 		printf("Volume has been decreased.");
-		sceKernelDelayThread(1000000);
 		main();
 	}
 }
