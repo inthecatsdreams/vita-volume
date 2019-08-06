@@ -30,7 +30,7 @@ int getCurrentVolume(){
 
 void decreaseVolume(int vol){
 	psvDebugScreenClear();
-	if (vol == 5){
+	if (vol == 0){
 		psvDebugScreenPrintf("You are alredy at the minimum.");
 		main();
 	}
@@ -42,17 +42,15 @@ void decreaseVolume(int vol){
 }
 
 int main() {
-		psvDebugScreenInit();
+	psvDebugScreenInit();
         psvDebugScreenClear(0);
-		psvDebugScreenPrintf("--- Vita Volume by inthecatsdreams ---\n");
+	psvDebugScreenPrintf("--- Vita Volume by inthecatsdreams ---\n");
         psvDebugScreenPrintf("CROSS: Increase Volume\n");
         psvDebugScreenPrintf("CIRCLE: Decrease Volume\n");
         psvDebugScreenPrintf("SQUARE: Apply settings and reboot\n");
-		psvDebugScreenPrintf("Current Volume: %d\n", getCurrentVolume());
-		int currentVolume = getCurrentVolume();
-		
-        
-        sceKernelDelayThread(100000);
+	psvDebugScreenPrintf("Current Volume: %d\n", getCurrentVolume());
+	int currentVolume = getCurrentVolume();
+	sceKernelDelayThread(100000);
         while(1)
         {
         switch(get_key(0)) {
@@ -63,14 +61,12 @@ int main() {
                     decreaseVolume(currentVolume);
                     break;
                 case SCE_CTRL_SQUARE:
-					scePowerRequestColdReset();
+		    scePowerRequestColdReset();
                     break;
                 default:
                     break;
                 }
         }
-        
 
-        
         return 0;
 }
