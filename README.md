@@ -15,5 +15,6 @@ and then press square to reboot.
 First you need the vitasdk installed on your computer.
 Then go in the directory and type
 ```cmake .```
-
+then
+```make```
 And if everything is setup properly you should get the vpk.
