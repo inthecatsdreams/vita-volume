@@ -9,17 +9,15 @@
 #define printf psvDebugScreenPrintf
 int ret;
 
-
-
 void increaseVolume(int vol){
 	psvDebugScreenClear();
 	if (vol == 30){
-		psvDebugScreenPrintf("You are alredy at the maxium.");
-		main();
+	    psvDebugScreenPrintf("You are alredy at the maxium.");
+	    main();
 	}
 	else {
-		int ret  = sceRegMgrSetKeyInt("/CONFIG/SOUND/", "main_volume", vol + 1);
-		main();
+	    int ret  = sceRegMgrSetKeyInt("/CONFIG/SOUND/", "main_volume", vol + 1);
+	    main();
 	}
 }
 int getCurrentVolume(){
@@ -31,13 +29,13 @@ int getCurrentVolume(){
 void decreaseVolume(int vol){
 	psvDebugScreenClear();
 	if (vol == 0){
-		psvDebugScreenPrintf("You are alredy at the minimum.");
-		main();
+	    psvDebugScreenPrintf("You are alredy at the minimum.");
+	    main();
 	}
 	else {
-		int ret  = sceRegMgrSetKeyInt("/CONFIG/SOUND/", "main_volume", vol - 1);
-		printf("Volume has been decreased.");
-		main();
+	    int ret  = sceRegMgrSetKeyInt("/CONFIG/SOUND/", "main_volume", vol - 1);
+	    printf("Volume has been decreased.");
+	    main();
 	}
 }
 
@@ -51,21 +49,21 @@ int main() {
 	psvDebugScreenPrintf("Current Volume: %d\n", getCurrentVolume());
 	int currentVolume = getCurrentVolume();
 	sceKernelDelayThread(100000);
-        while(1)
-        {
-        switch(get_key(0)) {
-                case SCE_CTRL_CROSS:
-                    increaseVolume(currentVolume);
-                    break;
-                case SCE_CTRL_CIRCLE:
-                    decreaseVolume(currentVolume);
-                    break;
-                case SCE_CTRL_SQUARE:
-		    scePowerRequestColdReset();
-                    break;
-                default:
-                    break;
-                }
+        while(1){
+
+	switch(get_key(0)) {
+            case SCE_CTRL_CROSS:
+                increaseVolume(currentVolume);
+                break;
+            case SCE_CTRL_CIRCLE:
+                decreaseVolume(currentVolume);
+                break;
+            case SCE_CTRL_SQUARE:
+		scePowerRequestColdReset();
+                break;
+            default:
+                break;
+        }
         }
 
         return 0;
