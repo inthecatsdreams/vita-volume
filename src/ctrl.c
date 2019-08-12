@@ -5,54 +5,64 @@
 
 #define printf psvDebugScreenPrintf
 
-int get_key(int type) {
+int
+get_key (int type)
+{
 
 
-	SceCtrlData pad;
+  SceCtrlData pad;
 
-	if(type == 0){
+  if (type == 0)
+    {
 
-		while (1) {
-			//memset(&pad, 0, sizeof(pad));
-			sceCtrlPeekBufferPositive(0, &pad, 1);
+      while (1)
+	{
+	  //memset(&pad, 0, sizeof(pad));
+	  sceCtrlPeekBufferPositive (0, &pad, 1);
 
-				if (pad.buttons != 0)
-					return pad.buttons;
+	  if (pad.buttons != 0)
+	    return pad.buttons;
 
-			sceKernelDelayThread(1000); // 1ms
-		}
+	  sceKernelDelayThread (1000);	// 1ms
+	}
 
-	}else{
+    }
+  else
+    {
 
-		while (1) {
+      while (1)
+	{
 
-			//memset(&pad, 0, sizeof(pad));
-			sceCtrlPeekBufferPositive(0, &pad, 1);
-			if(pad.buttons == 0){
+	  //memset(&pad, 0, sizeof(pad));
+	  sceCtrlPeekBufferPositive (0, &pad, 1);
+	  if (pad.buttons == 0)
+	    {
 
-				break;
+	      break;
 
-			}
+	    }
 
-			sceKernelDelayThread(1000); // 1ms
-
-		}
+	  sceKernelDelayThread (1000);	// 1ms
 
 	}
 
-	return 0;
+    }
+
+  return 0;
 
 }
 
 
-void press_exit(void) {
+void
+press_exit (void)
+{
 
-	get_key(1);
+  get_key (1);
 
-	printf("Press any key to exit this application.\n");
+  printf ("Press any key to exit this application.\n");
 
-	get_key(0);
+  get_key (0);
 
-	sceKernelExitProcess(0);
+  sceKernelExitProcess (0);
 
 }
