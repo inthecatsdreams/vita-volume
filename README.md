@@ -20,6 +20,3 @@ then
 And if everything is setup properly you should get the vpk.
 
 
-## Prebuilt binaries
-
-You can find prebuilt binaries [Here (Unknowncheats.me)](https://www.unknowncheats.me/forum/playstation/350121-ps-vita-vita-volume-app-set-vita-volume.html) if the download link isn't working, wait a bit, the file is still under verification and the UC staff has a lot of files to go through every day so it takes time.
