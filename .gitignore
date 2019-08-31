@@ -8,4 +8,5 @@ VitaVolume.vpk_param.sfo
 CMakeFiles/
 CMakeFiles/*
 Makefile
-
+.vs-code/*
+.vs-code

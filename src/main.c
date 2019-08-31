@@ -34,6 +34,15 @@ getCurrentVolume ()
 }
 
 void
+muteConsole()
+{
+  psvDebugScreenClear();
+  int ret = sceRegMgrSetKeyInt ("/CONFIG/SOUND/","main_volume", 0);
+  main ();
+
+}
+
+void
 decreaseVolume (int vol)
 {
   psvDebugScreenClear ();
@@ -58,6 +67,7 @@ main ()
   psvDebugScreenPrintf ("--- Vita Volume by inthecatsdreams ---\n");
   psvDebugScreenPrintf ("CROSS: Increase Volume\n");
   psvDebugScreenPrintf ("CIRCLE: Decrease Volume\n");
+  psvDebugScreenPrintf ("TRIANGLE: Mute Console\n");
   psvDebugScreenPrintf ("SQUARE: Apply settings and reboot\n");
   psvDebugScreenPrintf ("Current Volume: %d\n", getCurrentVolume ());
   int currentVolume = getCurrentVolume ();
@@ -75,6 +85,9 @@ main ()
 	  break;
 	case SCE_CTRL_SQUARE:
 	  scePowerRequestColdReset ();
+	  break;
+	case SCE_CTRL_TRIANGLE:
+	  muteConsole();
 	  break;
 	default:
 	  break;
