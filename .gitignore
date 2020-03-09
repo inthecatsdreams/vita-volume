@@ -1,6 +1,6 @@
 VitaVolume
 CMakeCache.txt
-eboot.bin
+eboot.bin*
 cmake_install.cmake
 VitaVolume.velf
 VitaVolume.*
