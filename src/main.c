@@ -59,7 +59,7 @@ int main()
 {
   psvDebugScreenInit();
   clearScreen(0);
-  printf("--- Vita Volume by inthecatsdreams(ic92) ---\n");
+  printf("--- Vita Volume by inthecatsdreams ---\n");
   printf("ARROW-UP: Increase Volume\n");
   printf("ARROW-DOWN: Decrease Volume\n");
   printf("TRIANGLE: Mute Console\n");
