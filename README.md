@@ -6,7 +6,6 @@ An application to set your vita volume level without using the volume buttons (u
 # How to use
 
 Set the value you want, 0 being the lowest and 30 the maximum (25 for AVLS forced vitas)
-You can also use predifined profiles now (as of version 2.0).
 
 and then press square to reboot.
 
