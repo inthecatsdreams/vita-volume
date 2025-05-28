@@ -16,6 +16,7 @@ void increaseVolume(int vol)
   if (vol == 30)
   {
     printf("You are alredy at the maxium. Nothing to do.");
+    sceKernelDelayThread(500000);
     main();
   }
   else
@@ -45,6 +46,7 @@ void decreaseVolume(int vol)
   if (vol == 0)
   {
     printf("You are alredy at the minimum.");
+    sceKernelDelayThread(500000);
     main();
   }
   else
@@ -59,10 +61,11 @@ int main()
 {
   psvDebugScreenInit();
   clearScreen(0);
-  printf("--- Vita Volume by boozerboozeman (formerly inthecatsdreams) ---\n");
+  printf("--- Vita Volume by inthecatsdreams ---\n");
   printf("ARROW-UP: Increase Volume\n");
   printf("ARROW-DOWN: Decrease Volume\n");
   printf("TRIANGLE: Mute Console\n");
+  printf("CIRCLE: Shutdown you vita\n");
   printf("CROSS: Apply settings and reboot\n");
   printf("Current Volume: %d\n", getCurrentVolume());
   int currentVolume = getCurrentVolume();
@@ -84,6 +87,8 @@ int main()
     case SCE_CTRL_TRIANGLE:
       muteConsole();
       break;
+    case SCE_CTRL_CIRCLE:
+      scePowerRequestStandby();
     default:
       break;
     }
