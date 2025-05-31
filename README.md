@@ -6,9 +6,8 @@ An application to set your vita volume level without using the volume buttons (u
 # How to use
 
 Set the value you want, 0 being the lowest and 30 the maximum (25 for AVLS forced vitas)
-
 and then press square to reboot.
-
+You can also disable AVLS for a short while, it's basically a shortcut to the option you have in the settings app.
 # How to build
 
 First you need the vitasdk installed on your computer.
