@@ -33,6 +33,16 @@ int getCurrentVolume()
   return val;
 }
 
+void disableAVLS()
+{
+  clearScreen();
+  int val = 0;
+  int buff = sceRegMgrSetKeyInt("/CONFIG/SOUND/", "avls", val);
+  printf("AVLS has been disabled, not permanently though");
+  sceKernelDelayThread(5000000);
+  main();
+}
+
 void muteConsole()
 {
   clearScreen();
@@ -66,6 +76,7 @@ int main()
   printf("ARROW-DOWN: Decrease Volume\n");
   printf("TRIANGLE: Mute Console\n");
   printf("CIRCLE: Shutdown you vita\n");
+  printf("SQUARE: Disable AVLS (use a kernel plugin to make it stick)\n");
   printf("CROSS: Apply settings and reboot\n");
   printf("Current Volume: %d\n", getCurrentVolume());
   int currentVolume = getCurrentVolume();
@@ -89,6 +100,9 @@ int main()
       break;
     case SCE_CTRL_CIRCLE:
       scePowerRequestStandby();
+    case SCE_CTRL_SQUARE:
+      disableAVLS();
+      break;
     default:
       break;
     }
