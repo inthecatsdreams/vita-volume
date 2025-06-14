@@ -14,13 +14,14 @@ char *lang = "en"; // default language
 const char* _(const char* key) {
     if (strcmp(lang, "it") == 0) {
         if (strcmp(key, "title") == 0) return "--- Vita Volume di inthecatsdreams ---";
-        if (strcmp(key, "vol_up") == 0) return "Freccia SU: Aumenta Volume";
-        if (strcmp(key, "vol_down") == 0) return "Freccia GIU': Diminuisci Volume";
-        if (strcmp(key, "mute") == 0) return "TRIANGOLO: Muta Console";
-        if (strcmp(key, "shutdown") == 0) return "CERCHIO: Spegni la console";
-        if (strcmp(key, "disable_avls") == 0) return "QUADRATO: Disabilita AVLS (non permanente)";
-        if (strcmp(key, "reboot") == 0) return "CROCE: Riavvia e applica";
-        if (strcmp(key, "exit") == 0) return "START: Esci dall'app";
+        if (strcmp(key, "vol_up") == 0) return "Aumenta Volume";
+        if (strcmp(key, "vol_down") == 0) return "Diminuisci Volume";
+        if (strcmp(key, "mute") == 0) return "Disattiva volume";
+        if (strcmp(key, "shutdown") == 0) return "Spegni la console";
+        if (strcmp(key, "disable_avls") == 0) return "Disabilita AVLS";
+        if (strcmp(key, "reboot") == 0) return "Riavvia e applica";
+        if (strcmp(key, "exit") == 0) return "Esci dall'app";
+        if (strcmp(key, "language") == 0) return "Lingua: Italiano";
         if (strcmp(key, "vol_increased") == 0) return "Volume aumentato!";
         if (strcmp(key, "vol_decreased") == 0) return "Volume diminuito!";
         if (strcmp(key, "muted") == 0) return "Console muta.";
@@ -29,18 +30,17 @@ const char* _(const char* key) {
         if (strcmp(key, "rebooting") == 0) return "Riavvio in corso...";
         if (strcmp(key, "shutting_down") == 0) return "Spegnimento in corso...";
         if (strcmp(key, "exiting") == 0) return "Uscita dall'app...";
-        if (strcmp(key, "avls_disabled") == 0) return "AVLS disabilitato (non permanente).";
-        if (strcmp(key, "lang_changed") == 0) return "Lingua cambiata.";
-        if (strcmp(key, "change_lang") == 0) return "SELECT: Cambia lingua (IT/EN)";
+        if (strcmp(key, "avls_disabled") == 0) return "AVLS disabilitato.";
     } else {
         if (strcmp(key, "title") == 0) return "--- Vita Volume by inthecatsdreams ---";
-        if (strcmp(key, "vol_up") == 0) return "ARROW-UP: Increase Volume";
-        if (strcmp(key, "vol_down") == 0) return "ARROW-DOWN: Decrease Volume";
-        if (strcmp(key, "mute") == 0) return "TRIANGLE: Mute Console";
-        if (strcmp(key, "shutdown") == 0) return "CIRCLE: Shutdown your Vita";
-        if (strcmp(key, "disable_avls") == 0) return "SQUARE: Disable AVLS (not permanent)";
-        if (strcmp(key, "reboot") == 0) return "CROSS: Apply settings and reboot";
-        if (strcmp(key, "exit") == 0) return "START: Exit app";
+        if (strcmp(key, "vol_up") == 0) return "Increase Volume";
+        if (strcmp(key, "vol_down") == 0) return "Decrease Volume";
+        if (strcmp(key, "mute") == 0) return "Mute volume";
+        if (strcmp(key, "shutdown") == 0) return "Shutdown console";
+        if (strcmp(key, "disable_avls") == 0) return "Disable AVLS";
+        if (strcmp(key, "reboot") == 0) return "Reboot and apply";
+        if (strcmp(key, "exit") == 0) return "Exit app";
+        if (strcmp(key, "language") == 0) return "Language: English";
         if (strcmp(key, "vol_increased") == 0) return "Volume increased!";
         if (strcmp(key, "vol_decreased") == 0) return "Volume decreased!";
         if (strcmp(key, "muted") == 0) return "Console muted.";
@@ -49,19 +49,9 @@ const char* _(const char* key) {
         if (strcmp(key, "rebooting") == 0) return "Rebooting...";
         if (strcmp(key, "shutting_down") == 0) return "Shutting down...";
         if (strcmp(key, "exiting") == 0) return "Exiting app...";
-        if (strcmp(key, "avls_disabled") == 0) return "AVLS disabled (not permanent).";
-        if (strcmp(key, "lang_changed") == 0) return "Language changed.";
-        if (strcmp(key, "change_lang") == 0) return "SELECT: Change language (IT/EN)";
+        if (strcmp(key, "avls_disabled") == 0) return "AVLS disabled.";
     }
     return "";
-}
-
-void saveLanguage() {
-    FILE* f = fopen("ux0:data/language.txt", "w");
-    if (f) {
-        fprintf(f, "%s", lang);
-        fclose(f);
-    }
 }
 
 void loadLanguage() {
@@ -69,8 +59,15 @@ void loadLanguage() {
     if (f) {
         char buffer[4];
         fgets(buffer, sizeof(buffer), f);
-        buffer[strcspn(buffer, "\r\n")] = 0; // Rimuove newline
-        if (strcmp(buffer, "it") == 0) lang = "it";
+        if (strncmp(buffer, "it", 2) == 0) lang = "it";
+        fclose(f);
+    }
+}
+
+void saveLanguage() {
+    FILE* f = fopen("ux0:data/language.txt", "w");
+    if (f) {
+        fputs(lang, f);
         fclose(f);
     }
 }
@@ -101,90 +98,105 @@ const char* getVolumeSymbol(int vol) {
     return "[🔊]";
 }
 
-void showMessage(const char* msg) {
+// dichiarazione anticipata
+const char* keyFromIndex(int i);
+
+void drawMenu(int selected) {
     clearScreen();
-    printf("\n%s\n", msg);
-    sceKernelDelayThread(2000000);  // 2 secondi
+    printf("%s\n\n", _("title"));
+
+    for (int i = 0; i < 8; i++) {
+        if (i == selected)
+            printf("> %s\n", _(keyFromIndex(i)));
+        else
+            printf("  %s\n", _(keyFromIndex(i)));
+    }
+
+    int vol = getCurrentVolume();
+    printf("\nVolume: %d %s\n", vol, getVolumeSymbol(vol));
+    printf("AVLS: %s\n", getAVLSStatus() ? "ON" : "OFF");
 }
 
-void drawScreen() {
-    clearScreen();
-    printf("%s\n", _( "title" ));
-    printf("%s\n", _( "vol_up" ));
-    printf("%s\n", _( "vol_down" ));
-    printf("%s\n", _( "mute" ));
-    printf("%s\n", _( "shutdown" ));
-    printf("%s\n", _( "disable_avls" ));
-    printf("%s\n", _( "reboot" ));
-    printf("%s\n", _( "exit" ));
-    printf("%s\n\n", _( "change_lang" ));
-    int vol = getCurrentVolume();
-    printf("Volume: %d %s\n", vol, getVolumeSymbol(vol));
-    printf("AVLS: %s\n", getAVLSStatus() ? "ON" : "OFF");
-    printf("Lingua: %s\n", strcmp(lang, "it") == 0 ? "Italiano" : "English");
+void showMessage(const char* msg) {
+    printf("\n%s\n", msg);
+    sceKernelDelayThread(2000000);
+}
+
+const char* keyFromIndex(int i) {
+    switch (i) {
+        case 0: return "vol_up";
+        case 1: return "vol_down";
+        case 2: return "mute";
+        case 3: return "disable_avls";
+        case 4: return "reboot";
+        case 5: return "shutdown";
+        case 6: return "exit";
+        case 7: return "language";
+        default: return "";
+    }
 }
 
 int main() {
     psvDebugScreenInit();
     loadLanguage();
-    drawScreen();
+
+    int selected = 0;
+    drawMenu(selected);
 
     while (1) {
         int key = get_key(0);
-        if (key) {
-            int vol = getCurrentVolume();
 
-            switch (key) {
-                case SCE_CTRL_UP:
+        if (key & SCE_CTRL_UP) {
+            if (selected > 0) selected--;
+            drawMenu(selected);
+        } else if (key & SCE_CTRL_DOWN) {
+            if (selected < 7) selected++;
+            drawMenu(selected);
+        } else if (key & SCE_CTRL_CROSS) {
+            int vol = getCurrentVolume();
+            switch (selected) {
+                case 0:
                     if (vol < 30) {
                         setVolume(vol + 1);
                         showMessage(_("vol_increased"));
                     } else showMessage(_("already_max"));
                     break;
-
-                case SCE_CTRL_DOWN:
+                case 1:
                     if (vol > 0) {
                         setVolume(vol - 1);
                         showMessage(_("vol_decreased"));
                     } else showMessage(_("already_min"));
                     break;
-
-                case SCE_CTRL_TRIANGLE:
+                case 2:
                     setVolume(0);
                     showMessage(_("muted"));
                     break;
-
-                case SCE_CTRL_SQUARE:
+                case 3:
                     disableAVLS();
                     showMessage(_("avls_disabled"));
                     break;
-
-                case SCE_CTRL_CROSS:
+                case 4:
                     showMessage(_("rebooting"));
                     scePowerRequestColdReset();
                     break;
-
-                case SCE_CTRL_CIRCLE:
+                case 5:
                     showMessage(_("shutting_down"));
                     scePowerRequestStandby();
                     break;
-
-                case SCE_CTRL_START:
+                case 6:
                     showMessage(_("exiting"));
                     sceKernelExitProcess(0);
                     break;
-
-                case SCE_CTRL_SELECT:
-                    lang = (strcmp(lang, "it") == 0) ? "en" : "it";
+                case 7:
+                    if (strcmp(lang, "it") == 0)
+                        lang = "en";
+                    else
+                        lang = "it";
                     saveLanguage();
-                    showMessage(_("lang_changed"));
-                    break;
-
-                default:
+                    drawMenu(selected);
                     break;
             }
-
-            drawScreen();
+            drawMenu(selected);
         }
 
         sceKernelDelayThread(100000);
