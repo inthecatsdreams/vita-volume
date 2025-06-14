@@ -8,105 +8,112 @@
 
 #define printf psvDebugScreenPrintf
 #define clearScreen psvDebugScreenClear
-int ret;
 
-void increaseVolume(int vol)
-{
-  clearScreen();
-  if (vol == 30)
-  {
-    printf("You are alredy at the maxium. Nothing to do.");
-    sceKernelDelayThread(500000);
-    main();
-  }
-  else
-  {
-    int ret = sceRegMgrSetKeyInt("/CONFIG/SOUND/", "main_volume", vol + 1);
-    main();
-  }
+// === Funzioni di sistema ===
+
+int getCurrentVolume() {
+    int val = 0;
+    sceRegMgrGetKeyInt("/CONFIG/SOUND/", "main_volume", &val);
+    return val;
 }
 
-int getCurrentVolume()
-{
-  int val = 0;
-  int buff = sceRegMgrGetKeyInt("/CONFIG/SOUND/", "main_volume", &val);
-  return val;
+int getAVLSStatus() {
+    int val = 0;
+    sceRegMgrGetKeyInt("/CONFIG/SOUND/", "avls", &val);
+    return val;
 }
 
-void disableAVLS()
-{
-  clearScreen();
-  int val = 0;
-  int buff = sceRegMgrSetKeyInt("/CONFIG/SOUND/", "avls", val);
-  printf("AVLS has been disabled, not permanently though");
-  sceKernelDelayThread(5000000);
-  main();
+void setVolume(int vol) {
+    sceRegMgrSetKeyInt("/CONFIG/SOUND/", "main_volume", vol);
 }
 
-void muteConsole()
-{
-  clearScreen();
-  int ret = sceRegMgrSetKeyInt("/CONFIG/SOUND/", "main_volume", 0);
-  main();
+void disableAVLS() {
+    sceRegMgrSetKeyInt("/CONFIG/SOUND/", "avls", 0);
 }
 
-void decreaseVolume(int vol)
-{
-  clearScreen();
-  if (vol == 0)
-  {
-    printf("You are alredy at the minimum.");
-    sceKernelDelayThread(500000);
-    main();
-  }
-  else
-  {
-    int ret = sceRegMgrSetKeyInt("/CONFIG/SOUND/", "main_volume", vol - 1);
-    printf("Volume has been decreased.");
-    main();
-  }
+void drawScreen() {
+    clearScreen();
+    printf("--- Vita Volume by inthecatsdreams ---\n");
+    printf("ARROW-UP: Increase Volume\n");
+    printf("ARROW-DOWN: Decrease Volume\n");
+    printf("TRIANGLE: Mute Console\n");
+    printf("CIRCLE: Shutdown your Vita\n");
+    printf("SQUARE: Disable AVLS (use a kernel plugin to make it stick)\n");
+    printf("CROSS: Apply settings and reboot\n");
+    printf("START: Exit app\n\n");
+    printf("Current Volume: %d\n", getCurrentVolume());
+    printf("AVLS Status: %s\n", getAVLSStatus() ? "Enabled" : "Disabled");
 }
 
-int main()
-{
-  psvDebugScreenInit();
-  clearScreen(0);
-  printf("--- Vita Volume by inthecatsdreams ---\n");
-  printf("ARROW-UP: Increase Volume\n");
-  printf("ARROW-DOWN: Decrease Volume\n");
-  printf("TRIANGLE: Mute Console\n");
-  printf("CIRCLE: Shutdown you vita\n");
-  printf("SQUARE: Disable AVLS (use a kernel plugin to make it stick)\n");
-  printf("CROSS: Apply settings and reboot\n");
-  printf("Current Volume: %d\n", getCurrentVolume());
-  int currentVolume = getCurrentVolume();
-  sceKernelDelayThread(100000);
-  while (1)
-  {
+// === Main ===
 
-    switch (get_key(0))
-    {
-    case SCE_CTRL_UP:
-      increaseVolume(currentVolume);
-      break;
-    case SCE_CTRL_DOWN:
-      decreaseVolume(currentVolume);
-      break;
-    case SCE_CTRL_CROSS:
-      scePowerRequestColdReset();
-      break;
-    case SCE_CTRL_TRIANGLE:
-      muteConsole();
-      break;
-    case SCE_CTRL_CIRCLE:
-      scePowerRequestStandby();
-    case SCE_CTRL_SQUARE:
-      disableAVLS();
-      break;
-    default:
-      break;
+int main() {
+    psvDebugScreenInit();
+    drawScreen();
+
+    while (1) {
+        int key = get_key(0);
+
+        if (key) {
+            int vol = getCurrentVolume();
+
+            switch (key) {
+                case SCE_CTRL_UP:
+                    if (vol < 30) {
+                        setVolume(vol + 1);
+                        printf("\nVolume increased to %d", vol + 1);
+                    } else {
+                        printf("\nAlready at maximum volume.");
+                    }
+                    break;
+
+                case SCE_CTRL_DOWN:
+                    if (vol > 0) {
+                        setVolume(vol - 1);
+                        printf("\nVolume decreased to %d", vol - 1);
+                    } else {
+                        printf("\nAlready at minimum volume.");
+                    }
+                    break;
+
+                case SCE_CTRL_TRIANGLE:
+                    setVolume(0);
+                    printf("\nConsole muted.");
+                    break;
+
+                case SCE_CTRL_SQUARE:
+                    disableAVLS();
+                    printf("\nAVLS disabled (not permanent).");
+                    break;
+
+                case SCE_CTRL_CROSS:
+                    printf("\nRebooting...");
+                    sceKernelDelayThread(1000000);
+                    scePowerRequestColdReset();
+                    break;
+
+                case SCE_CTRL_CIRCLE:
+                    printf("\nShutting down...");
+                    sceKernelDelayThread(1000000);
+                    scePowerRequestStandby();
+                    break;
+
+                case SCE_CTRL_START:
+                    printf("\nExiting app...");
+                    sceKernelDelayThread(1000000);
+                    sceKernelExitProcess(0);
+                    break;
+
+                default:
+                    break;
+            }
+
+            sceKernelDelayThread(1000000);
+            drawScreen(); // aggiorna schermata dopo ogni azione
+        }
+
+        sceKernelDelayThread(100000); // piccola attesa per non sovraccaricare CPU
     }
-  }
 
-  return 0;
+    return 0;
 }
