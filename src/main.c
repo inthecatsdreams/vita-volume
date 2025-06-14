@@ -8,8 +8,9 @@
 
 #define printf psvDebugScreenPrintf
 #define clearScreen psvDebugScreenClear
+#define VOLUME_PATH "ux0:data/volume.txt"
 
-// === Funzioni di sistema ===
+// === System Functions ===
 
 int getCurrentVolume() {
     int val = 0;
@@ -24,6 +25,8 @@ int getAVLSStatus() {
 }
 
 void setVolume(int vol) {
+    if (vol < 0) vol = 0;
+    if (vol > 30) vol = 30;
     sceRegMgrSetKeyInt("/CONFIG/SOUND/", "main_volume", vol);
 }
 
@@ -31,24 +34,59 @@ void disableAVLS() {
     sceRegMgrSetKeyInt("/CONFIG/SOUND/", "avls", 0);
 }
 
+void saveVolume(int vol) {
+    FILE *f = fopen(VOLUME_PATH, "w");
+    if (f) {
+        fprintf(f, "%d\n", vol);
+        fclose(f);
+    }
+}
+
+int loadSavedVolume() {
+    FILE *f = fopen(VOLUME_PATH, "r");
+    int v = -1;
+    if (f) {
+        fscanf(f, "%d", &v);
+        fclose(f);
+    }
+    return v;
+}
+
+void drawVolumeBar(int vol) {
+    printf("Volume: [");
+    for (int i = 0; i < 30; i++) {
+        printf(i < vol ? "#" : "-");
+    }
+    printf("] %d/30\n", vol);
+}
+
 void drawScreen() {
     clearScreen();
     printf("--- Vita Volume by inthecatsdreams ---\n");
-    printf("ARROW-UP: Increase Volume\n");
-    printf("ARROW-DOWN: Decrease Volume\n");
-    printf("TRIANGLE: Mute Console\n");
-    printf("CIRCLE: Shutdown your Vita\n");
-    printf("SQUARE: Disable AVLS (use a kernel plugin to make it stick)\n");
-    printf("CROSS: Apply settings and reboot\n");
-    printf("START: Exit app\n\n");
-    printf("Current Volume: %d\n", getCurrentVolume());
-    printf("AVLS Status: %s\n", getAVLSStatus() ? "Enabled" : "Disabled");
+    printf("UP / DOWN   : Increase / Decrease Volume\n");
+    printf("L / R       : Set Min / Max Volume\n");
+    printf("TRIANGLE    : Mute Console\n");
+    printf("SQUARE      : Disable AVLS (not permanent)\n");
+    printf("CIRCLE      : Shutdown your Vita\n");
+    printf("CROSS       : Reboot\n");
+    printf("START       : Exit\n\n");
+
+    int vol = getCurrentVolume();
+    int avls = getAVLSStatus();
+    drawVolumeBar(vol);
+    printf("AVLS Status: %s\n", avls ? "ENABLED" : "DISABLED");
 }
 
 // === Main ===
 
 int main() {
     psvDebugScreenInit();
+
+    int savedVol = loadSavedVolume();
+    if (savedVol >= 0) {
+        setVolume(savedVol);
+    }
+
     drawScreen();
 
     while (1) {
@@ -59,34 +97,31 @@ int main() {
 
             switch (key) {
                 case SCE_CTRL_UP:
-                    if (vol < 30) {
-                        setVolume(vol + 1);
-                        printf("\nVolume increased to %d", vol + 1);
-                    } else {
-                        printf("\nAlready at maximum volume.");
-                    }
+                    if (vol < 30) setVolume(vol + 1);
                     break;
 
                 case SCE_CTRL_DOWN:
-                    if (vol > 0) {
-                        setVolume(vol - 1);
-                        printf("\nVolume decreased to %d", vol - 1);
-                    } else {
-                        printf("\nAlready at minimum volume.");
-                    }
+                    if (vol > 0) setVolume(vol - 1);
+                    break;
+
+                case SCE_CTRL_LTRIGGER:
+                    setVolume(0);
+                    break;
+
+                case SCE_CTRL_RTRIGGER:
+                    setVolume(30);
                     break;
 
                 case SCE_CTRL_TRIANGLE:
                     setVolume(0);
-                    printf("\nConsole muted.");
                     break;
 
                 case SCE_CTRL_SQUARE:
                     disableAVLS();
-                    printf("\nAVLS disabled (not permanent).");
                     break;
 
                 case SCE_CTRL_CROSS:
+                    saveVolume(getCurrentVolume());
                     printf("\nRebooting...");
                     sceKernelDelayThread(1000000);
                     scePowerRequestColdReset();
@@ -108,11 +143,11 @@ int main() {
                     break;
             }
 
-            sceKernelDelayThread(1000000);
-            drawScreen(); // aggiorna schermata dopo ogni azione
+            saveVolume(getCurrentVolume());
+            drawScreen();
         }
 
-        sceKernelDelayThread(100000); // piccola attesa per non sovraccaricare CPU
+        sceKernelDelayThread(100000); // prevent high CPU usage
     }
 
     return 0;
