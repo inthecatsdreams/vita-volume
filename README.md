@@ -1,6 +1,7 @@
 # Vita Volume
 
 An application to set your vita volume level without using the volume buttons (useful if they are broken)
+@theheroGAC completely rewrote the application to make it more modern and easy to use, all credits go to him!
 
 
 # How to use
